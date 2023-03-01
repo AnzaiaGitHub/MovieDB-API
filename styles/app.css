@@ -1,0 +1,19 @@
+:root{
+  --color-darkblue: #030F27;
+  --color-red: #D93250;
+  --color-redpurple: #732743;
+  --color-orange: #F15757;
+  --color-cleargray: #F2F2F2;
+  --color-grayux: #949494;
+}
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body{
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--color-darkblue);
+  color: var(--color-cleargray);
+}
