@@ -142,12 +142,13 @@ main section h2.section-title{
 }
 #recommended-courtain{
   width: 100%;
-  height: 50%;
+  height: 120px;
   position: absolute;
   bottom: 0;
   left: 0;
   background: linear-gradient(179.7deg, rgba(0, 0, 0, 0) 0.26%, rgba(0, 0, 0, 0.75) 19.04%, rgba(0, 0, 0, 0.9) 53.63%, #000000 99.74%);
   z-index: 1;
+  opacity: 0.9;
 }
 h3#recommended-movie-title{
   margin-left: 10px;
@@ -171,6 +172,7 @@ h3#recommended-movie-title{
   justify-content: flex-start;
   gap: 5px;
   align-items: flex-start;
+  z-index: 2;
 }
 .category{
   padding: 0 5px;
@@ -178,4 +180,30 @@ h3#recommended-movie-title{
   border-radius: 2px;
   color: var(--color-grayux);
   font-size: 8px;
+}
+#recommended-movie-description{
+  margin-left: 10px;
+  font-size: 10px;
+  font-family: "PT Sans",sans-serif;
+  z-index: 2;
+}
+#recommended-movie-info{
+  margin: 0 0 10px 10px;
+  font-size: 10px;
+  font-family: "PT Sans",sans-serif;
+  z-index: 2;
+  display: flex;
+  gap: 20px;
+}
+.movie-rate::before{
+  content: "⭐";
+  margin: 0;
+  padding: 0;
+}
+.movie-director::before{
+  content: "Dir.";
+  font-weight: 100;
+  font-style: italic;
+  color: var(--color-grayux);
+  margin-right:4px;
 }
