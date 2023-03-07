@@ -13,6 +13,7 @@
 }
 html{
   overflow: hidden;
+  scroll-behavior: smooth;
 }
 body{
   min-height: 100vh;
@@ -20,6 +21,7 @@ body{
   background-color: var(--color-darkblue);
   color: var(--color-cleargray);
   font-family: 'PT Sans',sans-serif;
+  overflow: hidden;
 }
 .hidden{
   display: none;
@@ -28,6 +30,7 @@ body{
 /*Header styles*/
 #header-container{
   width: 100vw;
+  height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +47,7 @@ body{
   height: 30px;
 }
 #header-searchbar>#search-input{
-  width: 280px;
+  width: 80%;
   height: 27px;
   padding-left: 16px;
   border: none;
@@ -62,7 +65,7 @@ body{
 }
   /* Header Navbar */
 #header-navbar{
-  margin: 12px 0;
+  margin: 8px 0;
   width: 100%;
   height: 15px;
   padding: 0 30px;
@@ -92,26 +95,28 @@ body{
 
 /* Section Styles */
 main{
-  width: 100%;
+  width: 100vw;
+  height: 90vh;
   margin-top: 8px;
+  padding-bottom: 24px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 
   /* General section styles */
-main section{
+main>#recommended-section{
   position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  min-height: 160px;
 }
-main section h2.section-title{
+main>#recommended-section>h2.section-title{
   display: inline-block;
   font-weight: normal;
   margin-left: 10px;
@@ -206,4 +211,47 @@ h3#recommended-movie-title{
   font-style: italic;
   color: var(--color-grayux);
   margin-right:4px;
+}
+/* Custom Sections Styles */
+#sections-container{
+  margin-top: 18px;
+  width: 100vw;
+}
+#sections-container section{
+  height: 160px;
+  width: 100%;
+}
+#sections-container section h2.section-title{
+  display: grid;
+  place-items: center;
+  height: 16px;
+  font-size: 12px;
+  font-weight: normal;
+  margin-left: 10px;
+}
+#sections-container section .section-items-container{
+  width: 100%;
+  padding: 10px 0;
+  border-top: 1px solid var(--color-grayux);
+  overflow-x:auto;
+  display: flex;
+  gap: 4px;
+}
+.section-items-container article.section-item{
+  min-height: 120px;
+  min-width: 80px;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.section-item:nth-child(1){
+  margin-left: 8px;
+}
+.section-item:nth-last-child(1){
+  margin-right: 8px;
+}
+.section-item .section-item-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
