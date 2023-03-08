@@ -218,6 +218,9 @@ h3#recommended-movie-title{
   width: 100vw;
 }
 #sections-container section{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   height: 160px;
   width: 100%;
 }
