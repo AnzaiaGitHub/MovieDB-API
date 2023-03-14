@@ -161,12 +161,18 @@ h3#recommended-movie-title{
   font-size: 12px;
   z-index: 2;
 }
-.movie-duration{
+.movie-year{
   margin-left: 24px;
   font-weight: normal;
   color: var(--color-grayux);
 }
-#recommended-movie-duration{
+.movie-year::before{
+  content: "(";
+}
+.movie-year::after{
+  content: ")";
+}
+#recommended-movie-year{
   z-index: 2;
 }
 #recommended-categories-container{
@@ -205,10 +211,12 @@ h3#recommended-movie-title{
   margin: 0;
   padding: 0;
 }
-.movie-director::before{
-  content: "Dir.";
+.movie-language{
+  text-transform: capitalize;
+}
+.movie-language::before{
+  content: "Lang:";
   font-weight: 100;
-  font-style: italic;
   color: var(--color-grayux);
   margin-right:4px;
 }

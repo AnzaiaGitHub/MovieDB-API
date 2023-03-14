@@ -4,8 +4,8 @@ const apiEndpoints = {
     route:"/trending",
     mediaType:{
       all:"/all",
-      movies:"/movie",
-      tv_shows:"/tv",
+      movie:"/movie",
+      tv:"/tv",
       person:"/person",
     },
     timeWindow:{
@@ -26,11 +26,30 @@ const apiEndpoints = {
     top_rated: API+"/tv/top_rated",
   }
 }
+let curMediaType = "movie";//movie or tv
 const QP_API_KEY = "?api_key="+API_KEY;
 const imageBaseUrlSmall = "https://image.tmdb.org/t/p/w300";
+const imageBaseUrlMedium = "https://image.tmdb.org/t/p/w500";
 const imageBaseUrlOriginal = "https://image.tmdb.org/t/p/original";
+// html nodes
 const sectionsContainer = document.getElementById("sections-container");
-
+// global vars
+let trendingItems = [];
+let curTrendingItemIndex = 0;
+let categoriesList;
+// functions
+async function setCategories(){
+  const url = API+"/genre/"+curMediaType+"/list"+QP_API_KEY;
+  try{
+    const res = await fetch(url);
+    const data = await res.json();
+    if(data){
+      categoriesList = data.genres;
+    }
+  }catch(err){
+    console.error(err);
+  }
+}
 async function getFetchData(url){
   try{
     const res = await fetch(url);
@@ -40,6 +59,15 @@ async function getFetchData(url){
     console.error(err);
     return err;
   }
+}
+async function getTrending(mediaType,timeWindow){
+  const url = 
+  API+
+  apiEndpoints.trending.route+
+  apiEndpoints.trending.mediaType[mediaType]+
+  apiEndpoints.trending.timeWindow[timeWindow]+QP_API_KEY;
+  const data = await getFetchData(url);
+  return data.results;
 }
 
 function getSectionName(str){
@@ -54,10 +82,50 @@ function getSectionName(str){
   return str;
 }
 
+function nextTrend(){
+  if(curTrendingItemIndex == trendingItems.length-1)
+    curTrendingItemIndex=0;
+  else
+    curTrendingItemIndex++;
+  renderTrending();
+}
+function renderTrending(){
+  const item = trendingItems[curTrendingItemIndex];
+
+  const imageNode = document.querySelector("#recommended-img-container").getElementsByTagName("img")[0];
+  imageNode.setAttribute("src",`${imageBaseUrlMedium}${item.backdrop_path}`);
+  
+  const year = new Date(item.release_date).getFullYear();
+  const titleNode = document.querySelector("#recommended-movie-title");
+  titleNode.childNodes[0].textContent = item.title;
+  titleNode.childNodes[1].innerHTML = year;
+
+  const categoriesContainer = document.querySelector("#recommended-categories-container");
+  categoriesContainer.innerHTML ="";
+  item.genre_ids.forEach(id => {
+    const category = categoriesList.find(cat => cat.id=== id);
+    
+    const div = document.createElement("div");
+    div.classList.add("category");
+    div.innerHTML = category.name;
+    
+    categoriesContainer.append(div);
+  });
+
+  const overviewNode = document.querySelector("#recommended-movie-description");
+  overviewNode.innerHTML = item.overview;
+  
+  const rateNode = document.querySelector("#recommended-movie-rate");
+  rateNode.innerHTML = Math.round((item.vote_average + Number.EPSILON)*10)/10;
+
+  const languageNode = document.querySelector("#recommended-movie-language");
+  languageNode.innerHTML = item.original_language;
+}
+
 async function openDetails(mediaType,id){
   const url = API+`/${mediaType}/${id}${QP_API_KEY}`;
-  const movie = await getFetchData(url);
-  console.log(movie);
+  const renderItemDetail = await getFetchData(url);
+  console.log(renderItemDetail);
 }
 
 function renderHomeSection(section, data){
@@ -81,7 +149,7 @@ function renderHomeSection(section, data){
     img.classList.add("section-item-img");
     article.appendChild(img);
     article.addEventListener("click",()=>{
-      openDetails("movie",item.id)
+      openDetails(curMediaType,item.id)
     });
     itemsContainer.appendChild(article);
   });
@@ -90,10 +158,16 @@ function renderHomeSection(section, data){
     h2,
     itemsContainer
   );
+
   sectionsContainer.append(sectionNode);
 }
 
 async function getMoviesPreview(){
+  await setCategories();
+  trendingItems = await getTrending(curMediaType,"week");
+  curTrendingItemIndex=0;
+  renderTrending();
+  window.setInterval(()=>nextTrend(),8000);
   sectionsContainer.innerHTML="";
   for(const section in apiEndpoints.movies){
     const url = apiEndpoints.movies[section]+QP_API_KEY;
@@ -101,7 +175,6 @@ async function getMoviesPreview(){
     const movies = data.results;
     if(movies){
       renderHomeSection(section,movies);
-      console.log(movies);
     }
   }
 }
