@@ -80,14 +80,22 @@ body{
   gap: 8px;
   font-size: 12px;
 }
-#header-navbar>#windows>.navbar-item{
+#header-navbar>#windows>.navbar-item,
+#header-navbar>#windows>.navbar-item a
+{
   height: 15px;
   line-height: 15px;
   list-style: none;
   cursor: pointer;
   color: var(--color-cleargray);
 }
-#header-navbar>#windows>.navbar-item.active{
+.navbar-item a,
+.navbar-item a:visited,
+.navbar-item a:active
+{
+  text-decoration: none;
+}
+#header-navbar>#windows>.navbar-item.active a{
   text-decoration-line: underline;
   color: var(--color-orange);
   font-weight: bold;

@@ -95,8 +95,11 @@ function renderTrending(){
 
   const imageNode = $("recommended-img-container").getElementsByTagName("img")[0];
   imageNode.setAttribute("src",`${imageBaseUrlMedium}${(item.backdrop_path?item.backdrop_path:item.poster_path)}`);
-  
-  const year = new Date(item.release_date).getFullYear();
+  const year = new Date(
+    curMediaType=="movie"?
+    item.release_date:
+    item.first_air_date
+    ).getFullYear();
   const titleNode = $("recommended-movie-title");
   titleNode.childNodes[0].textContent = (item.title?item.title:item.name);
   titleNode.childNodes[1].innerHTML = year;
