@@ -34,16 +34,19 @@ const apiEndpoints = {
     top_rated: "/tv/top_rated",
   }
 }
-let curMediaType = "movie";//movie or tv
+const $ = (id)=>{
+  return document.querySelector(`#${id}`);
+};
 const imageBaseUrlSmall = "https://image.tmdb.org/t/p/w300";
 const imageBaseUrlMedium = "https://image.tmdb.org/t/p/w500";
 const imageBaseUrlOriginal = "https://image.tmdb.org/t/p/original";
 // html nodes
-const sectionsContainer = document.getElementById("sections-container");
+const sectionsContainer = $("sections-container");
 // global vars
 let trendingItems = [];
 let curTrendingItemIndex = 0;
 let categoriesList;
+let curMediaType = "movie";//movie or tv
 // functions
 async function setCategories(){
   try{
@@ -63,6 +66,8 @@ async function getTrending(mediaType,timeWindow){
   apiEndpoints.trending.timeWindow[timeWindow];
   const res = await API(path);
   const data = await res.data;
+  console.log("getTrending");
+  console.log(data.results);
   return data.results;
 }
 
@@ -88,15 +93,15 @@ function nextTrend(){
 function renderTrending(){
   const item = trendingItems[curTrendingItemIndex];
 
-  const imageNode = document.querySelector("#recommended-img-container").getElementsByTagName("img")[0];
-  imageNode.setAttribute("src",`${imageBaseUrlMedium}${item.backdrop_path}`);
+  const imageNode = $("recommended-img-container").getElementsByTagName("img")[0];
+  imageNode.setAttribute("src",`${imageBaseUrlMedium}${(item.backdrop_path?item.backdrop_path:item.poster_path)}`);
   
   const year = new Date(item.release_date).getFullYear();
-  const titleNode = document.querySelector("#recommended-movie-title");
-  titleNode.childNodes[0].textContent = item.title;
+  const titleNode = $("recommended-movie-title");
+  titleNode.childNodes[0].textContent = (item.title?item.title:item.name);
   titleNode.childNodes[1].innerHTML = year;
 
-  const categoriesContainer = document.querySelector("#recommended-categories-container");
+  const categoriesContainer = $("recommended-categories-container");
   categoriesContainer.innerHTML ="";
   item.genre_ids.forEach(id => {
     const category = categoriesList.find(cat => cat.id=== id);
@@ -108,20 +113,20 @@ function renderTrending(){
     categoriesContainer.append(div);
   });
 
-  const overviewNode = document.querySelector("#recommended-movie-description");
+  const overviewNode = $("recommended-movie-description");
   overviewNode.innerHTML = item.overview;
   
-  const rateNode = document.querySelector("#recommended-movie-rate");
+  const rateNode = $("recommended-movie-rate");
   rateNode.innerHTML = Math.round((item.vote_average + Number.EPSILON)*10)/10;
 
-  const languageNode = document.querySelector("#recommended-movie-language");
+  const languageNode = $("recommended-movie-language");
   languageNode.innerHTML = item.original_language;
 }
 
 async function openDetails(mediaType,id){
   const path = `/${mediaType}/${id}`;
-  const renderItemDetail = await API(path);
-  console.log(renderItemDetail);
+  const {data} = await API(path);
+  console.log(data);
 }
 
 function renderHomeSection(section, data){
@@ -140,7 +145,7 @@ function renderHomeSection(section, data){
     const article = document.createElement("article");
     article.classList.add("section-item");
     const img = document.createElement("img");
-    img.setAttribute("src",imageBaseUrlSmall+item.poster_path);
+    img.setAttribute("src",imageBaseUrlSmall+(item.poster_path?item.poster_path:item.backdrop_path));
     img.setAttribute("alt",item.title);
     img.classList.add("section-item-img");
     article.appendChild(img);
@@ -166,19 +171,18 @@ async function getMoviesPreview(){
   renderTrending();
   window.setInterval(()=>nextTrend(),8000);
   sectionsContainer.innerHTML="";
-  for(const section in apiEndpoints.movies){
-    const path = apiEndpoints.movies[section];
+  const contentToRender = curMediaType=="movie"?apiEndpoints.movies:apiEndpoints.tvShows
+  for(const section in contentToRender){
+    const path = contentToRender[section];
     const res = await API(path);
     const data = res.data;
-    console.log("getMoviesPreview");
-    console.log(data);
-    const movies = data.results;
-    if(movies){
-      renderHomeSection(section,movies);
+    const results = data.results;
+    if(results){
+      renderHomeSection(section,results);
     }
   }
 }
-window.onload = getMoviesPreview();
+
 window.onclose = ()=>{
   clearInterval(()=>nextTrend(),8000);
 };
