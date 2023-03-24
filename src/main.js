@@ -1,4 +1,12 @@
-const API = "https://api.themoviedb.org/3";
+const API = axios.create({
+  baseURL:"https://api.themoviedb.org/3",
+  headers:{
+    'Content-Type':'application/json;charset=utf-8',
+  },
+  params: {
+    'api_key':API_KEY,
+  }
+});
 const apiEndpoints = {
   trending:{
     route:"/trending",
@@ -14,20 +22,19 @@ const apiEndpoints = {
     }
   },
   movies: {
-    popular: API+"/movie/popular",
-    now_playing: API+"/movie/now_playing",
-    top_rated: API+"/movie/top_rated",
-    upcoming: API+"/movie/upcoming",
+    popular: "/movie/popular",
+    now_playing: "/movie/now_playing",
+    top_rated: "/movie/top_rated",
+    upcoming: "/movie/upcoming",
   },
   tvShows:{
-    popular: API+"/tv/popular",
-    airing_today: API+"/tv/airing_today",
-    on_the_air: API+"/tv/on_the_air",
-    top_rated: API+"/tv/top_rated",
+    popular: "/tv/popular",
+    airing_today: "/tv/airing_today",
+    on_the_air: "/tv/on_the_air",
+    top_rated: "/tv/top_rated",
   }
 }
 let curMediaType = "movie";//movie or tv
-const QP_API_KEY = "?api_key="+API_KEY;
 const imageBaseUrlSmall = "https://image.tmdb.org/t/p/w300";
 const imageBaseUrlMedium = "https://image.tmdb.org/t/p/w500";
 const imageBaseUrlOriginal = "https://image.tmdb.org/t/p/original";
@@ -39,10 +46,9 @@ let curTrendingItemIndex = 0;
 let categoriesList;
 // functions
 async function setCategories(){
-  const url = API+"/genre/"+curMediaType+"/list"+QP_API_KEY;
   try{
-    const res = await fetch(url);
-    const data = await res.json();
+    const res = await API(`/genre/${curMediaType}/list`);
+    const data = await res.data;
     if(data){
       categoriesList = data.genres;
     }
@@ -50,23 +56,13 @@ async function setCategories(){
     console.error(err);
   }
 }
-async function getFetchData(url){
-  try{
-    const res = await fetch(url);
-    const data = await res.json();
-    return data;
-  }catch(err){
-    console.error(err);
-    return err;
-  }
-}
 async function getTrending(mediaType,timeWindow){
-  const url = 
-  API+
+  const path = 
   apiEndpoints.trending.route+
   apiEndpoints.trending.mediaType[mediaType]+
-  apiEndpoints.trending.timeWindow[timeWindow]+QP_API_KEY;
-  const data = await getFetchData(url);
+  apiEndpoints.trending.timeWindow[timeWindow];
+  const res = await API(path);
+  const data = await res.data;
   return data.results;
 }
 
@@ -123,8 +119,8 @@ function renderTrending(){
 }
 
 async function openDetails(mediaType,id){
-  const url = API+`/${mediaType}/${id}${QP_API_KEY}`;
-  const renderItemDetail = await getFetchData(url);
+  const path = `/${mediaType}/${id}`;
+  const renderItemDetail = await API(path);
   console.log(renderItemDetail);
 }
 
@@ -164,14 +160,18 @@ function renderHomeSection(section, data){
 
 async function getMoviesPreview(){
   await setCategories();
-  trendingItems = await getTrending(curMediaType,"week");
+  const trendingLong = "week"; //week-day
+  trendingItems = await getTrending(curMediaType,trendingLong);
   curTrendingItemIndex=0;
   renderTrending();
   window.setInterval(()=>nextTrend(),8000);
   sectionsContainer.innerHTML="";
   for(const section in apiEndpoints.movies){
-    const url = apiEndpoints.movies[section]+QP_API_KEY;
-    const data = await getFetchData(url);
+    const path = apiEndpoints.movies[section];
+    const res = await API(path);
+    const data = res.data;
+    console.log("getMoviesPreview");
+    console.log(data);
     const movies = data.results;
     if(movies){
       renderHomeSection(section,movies);
@@ -179,3 +179,6 @@ async function getMoviesPreview(){
   }
 }
 window.onload = getMoviesPreview();
+window.onclose = ()=>{
+  clearInterval(()=>nextTrend(),8000);
+};
