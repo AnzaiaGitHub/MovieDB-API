@@ -12,18 +12,28 @@
   
 </head>
 <body>
-  <header id="header-container">
-    <div id="header-movie-detail" class="hidden">
-      <button id="header-back-btn">BACK</button>
-      <div id="header-movie-detail-courtine"></div>
-      <h1 id="header-movie-detail--title">Movie Title</h1>
+  <header id="header-container" class="header-container">
+    <div id="header-movie-detail" class="header-movie-detail hidden">
+      <button id="header-back-btn" class="header-back-btn">BACK</button>
+      <div id="header-movie-detail-courtine" class="header-movie-detail-courtine"></div>
+      <img id="header-movie-detail--img" class="header-movie-detail-img" src="https://i.ytimg.com/vi/M25zXBIUVr0/maxresdefault.jpg" alt="detail img"></img>
+      <h1 id="header-movie-detail--title" class="header-movie-detail--title">Movie Title <span id="header-movie-detail--year" class="movie-year">(20XX)</span></h1>
     </div>
-    <form id="header-searchbar">
+    <form
+    id="header-searchbar"
+    class="header-searchbar"
+    >
       <input type="text" name="search" id="search-input" placeholder="Search movies">
       <button id="search-btn"><img src="./assets/icons/search.svg" /></button>
     </form>
-    <nav id="header-navbar">
-      <ul id="windows">
+    <nav
+    id="header-navbar"
+    class="header-navbar"
+    >
+      <ul
+      id="windows"
+      class="windows"
+      >
         <li class="navbar-item">
           <a href="#">
             Movies
@@ -38,30 +48,41 @@
     </nav>
   </header>
   <main id="main-container">
-    <section id="recommended-section">
+    <section
+    id="recommended-section" class="recommended-section"
+    >
       <h2 class="section-title">Recommendations</h2>
-      <div id="recommended-img-container">
+      <div id="recommended-img-container" class="recommended-img-container">
         <img src="https://i.ytimg.com/vi/M25zXBIUVr0/maxresdefault.jpg">
       </div>
-      <div id="recommended-container">
-        <div id="recommended-courtain">
+      <div
+      id="recommended-container"
+      class="recommended-container"
+      >
+        <div id="recommended-courtain"
+        class="recommended-courtain">
         </div>
-        <h3 id="recommended-movie-title">Movie Title <span id="recommended-movie-year" class="movie-year">(20XX)</span></h3>
-        <div id="recommended-categories-container">
+        <h3 id="recommended-movie-title"
+        class="recommended-movie-title">Movie Title <span id="recommended-movie-year" class="movie-year">(20XX)</span></h3>
+        <div id="recommended-categories-container"
+        class="recommended-categories-container">
           <div class="category">Action</div>
           <div class="category">Adventure</div>
           <div class="category">Thriller</div>
         </div>
-        <div id="recommended-movie-description">
+        <div id="recommended-movie-description"
+        class="recommended-movie-description">
           Some brief description about the movie, Some brief description about the movie, Some brief description about the movie, Some brief description about the movie, Some brief description about the movie, Some brief description about the movie, Some brief description about the movie, Some brief description about the movie.
         </div>
-        <div id="recommended-movie-info">
+        <div id="recommended-movie-info"
+        class="recommended-movie-info">
           <span id="recommended-movie-rate" class="movie-rate">6.8</span>
           <span id="recommended-movie-language" class="movie-language">en</span>
         </div>
       </div>
     </section>
-    <div id="sections-container">
+    <div id="sections-container" class="sections-container"
+    >
       <section id="section1"><!--Popular-->
         <h2 class="section-title">Popular</h2>
         <div class="section-items-container">
@@ -194,6 +215,7 @@
   </main>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="./src/hidden.js"></script>
+  <script src="./src/nodes.js"></script>
   <script src="./src/main.js"></script>
   <script src="./src/navigation.js"></script>
 </body>

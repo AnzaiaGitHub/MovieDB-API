@@ -1,10 +1,44 @@
+function hideNodes(node){
+  if(node[0])
+    node.forEach(nd => nd.classList.add("hidden"));
+  else
+    node.classList.add("hidden");
+}
+function showNodes(node){
+  if(node[0])
+    node.forEach(nd => nd.classList.remove("hidden"));
+  else
+    node.classList.remove("hidden");
+}
 function searchPage(){
   console.log("search page");
 }
-function movieDetailsPage(){
-  console.log("movieDetails page");
+async function detailsPage(){
+  const id = location.hash.split("=")[1];
+  const path = `/${curMediaType}/${id}`;
+  const {data} = await API(path);
+  console.log(data);
+  hideNodes([
+    headerNavbar,
+    headerSearchbar,
+    trendSectionNode
+  ]);
+  showNodes([
+    headerDetail,
+  ]);
+  
+  headerDetailImg.src = `${imageBaseUrlMedium}${data.backdrop_path}`;
+  
+  const year = new Date(
+    curMediaType=="movie"?
+    data.release_date:
+    data.first_air_date
+    ).getFullYear();
+  headerDetailTitle.childNodes[0].textContent = (data.title?data.title:data.name);
+  headerDetailTitle.childNodes[1].innerHTML = year;
+  
 }
-function categoryPage(){
+function categoriesPage(){
   console.log("category page");
 }
 function homePage(){
@@ -23,10 +57,10 @@ function navigation (){
   const hash = location.hash;
   if(hash.startsWith("#search=")){
     searchPage();
-  }else if(hash.startsWith("#movie=")){
-    movieDetailsPage();
+  }else if(hash.startsWith("#movie=") || hash.startsWith("#tv=")){
+    detailsPage();
   }else if(hash.startsWith("#category=")){
-    categoryPage();
+    categoriesPage();
   }else{
     curMediaType = (hash=="#tvshow"?"tv":"movie");
     homePage();
