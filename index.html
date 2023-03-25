@@ -13,18 +13,12 @@
 </head>
 <body>
   <header id="header-container" class="header-container">
-    <div id="header-movie-detail" class="header-movie-detail hidden">
-      <button id="header-back-btn" class="header-back-btn">BACK</button>
-      <div id="header-movie-detail-courtine" class="header-movie-detail-courtine"></div>
-      <img id="header-movie-detail--img" class="header-movie-detail-img" src="https://i.ytimg.com/vi/M25zXBIUVr0/maxresdefault.jpg" alt="detail img"></img>
-      <h1 id="header-movie-detail--title" class="header-movie-detail--title">Movie Title <span id="header-movie-detail--year" class="movie-year">(20XX)</span></h1>
-    </div>
     <form
     id="header-searchbar"
     class="header-searchbar"
     >
-      <input type="text" name="search" id="search-input" placeholder="Search movies">
-      <button id="search-btn"><img src="./assets/icons/search.svg" /></button>
+      <input type="text" name="search" id="search-input" class="search-input" placeholder="Search movies">
+      <button id="search-btn" class="search-btn"><img src="./assets/icons/search.svg" /></button>
     </form>
     <nav
     id="header-navbar"
@@ -34,12 +28,18 @@
       id="windows"
       class="windows"
       >
-        <li class="navbar-item">
+        <li
+        id="navbar-movie"
+        class="navbar-item"
+        >
           <a href="#">
             Movies
           </a>
         </li>
-        <li class="navbar-item">
+        <li
+        id="navbar-tv"
+        class="navbar-item"
+        >
           <a href="#tvshow">
             TV Shows
           </a>
@@ -48,12 +48,120 @@
     </nav>
   </header>
   <main id="main-container">
+    <section 
+    id="movie-detail-section"
+    class="movie-detail-section hidden">
+      <div id="movie-detail-header" class="movie-detail-header">
+        <a id="movie-detail-header-back-btn" class="movie-detail-header-back-btn" href="#">BACK</a>
+        <div id="movie-detail-header-courtine" class="movie-detail-header-courtine"></div>
+        <img id="movie-detail-header-img" class="movie-detail-header-img" src="https://www.themoviedb.org/t/p/w533_and_h300_bestv2/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg" alt="detail img"></img>
+        <h1 id="movie-detail-header-title" class="movie-detail-header-title">Movie Title <span id="movie-detail-header-year" class="movie-year">20XX</span></h1>
+      </div>
+      <p
+      id="movie-detail-duration"
+      class="movie-detail-duration"
+      >
+      Movie 1h 43m
+      </p>
+      <div
+      id="movie-detail-categories-container"
+      class="movie-detail-categories-container">
+        <div class="category">Action</div>
+        <div class="category">Adventure</div>
+        <div class="category">Thriller</div>
+      </div>
+      <p id="movie-detail-overview" class="movie-detail-overview">
+        Puss in Boots discovers that his passion for adventure has taken its toll: He has burned through eight of his nine lives, leaving him with only one life left. Puss sets out on an epic journey to find the mythical Last Wish and restore his nine lives.
+      </p>
+      <p class="movie-detail-item">
+        Rate:<span id="movie-detail-rate" class="movie-detail-item-content">4.3</span>
+      </p>
+      <p class="movie-detail-item">
+        Dir:<span id="movie-detail-director" class="movie-detail-item-content">Joel Crawford</span>
+      </p>
+      <div id="movie-detail-topCast" class="movie-detail-topBilledCast">
+        <h2 class="section-title">Top Billed Casts</h2>
+        <div id="movie-detail-cast-container" class="movie-detail-cast-container">
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+          <article class="movie-detail-cast-item">
+            <img class="movie-detail-cast--img" src="https://www.themoviedb.org/t/p/w235_and_h235_face/q1NRzyZQlYkxLY07GO9NVPkQnu8.jpg" alt="Jenna Ortega">
+          </article>
+        </div>
+      </div>
+      <div id="movie-detail-similar" class="movie-detail-similar">
+        <h2 class="section-title">Similar Content</h2>
+        <div id="movie-detail-similar-container" class="movie-detail-similar-container">
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+          <article class="movie-detail-similar-item">
+            <img src="https://www.themoviedb.org/t/p/original/sv1xJUazXeYqALzczSZ3O6nkH75.jpg" alt="" class="movie-detail-similar-img">
+          </article>
+        </div>
+      </div>
+    </section>
     <section
     id="recommended-section" class="recommended-section"
     >
       <h2 class="section-title">Recommendations</h2>
       <div id="recommended-img-container" class="recommended-img-container">
-        <img src="https://i.ytimg.com/vi/M25zXBIUVr0/maxresdefault.jpg">
+        <img id="recommended-img" src="https://i.ytimg.com/vi/M25zXBIUVr0/maxresdefault.jpg">
       </div>
       <div
       id="recommended-container"

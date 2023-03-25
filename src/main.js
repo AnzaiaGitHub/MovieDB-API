@@ -43,6 +43,7 @@ const imageBaseUrlOriginal = "https://image.tmdb.org/t/p/original";
 let trendingItems = [];
 let curTrendingItemIndex = 0;
 let categoriesList;
+let trendInterval;
 let curMediaType = "movie";//movie or tv
 // functions
 async function setCategories(){
@@ -61,8 +62,7 @@ async function getTrending(mediaType,timeWindow){
   apiEndpoints.trending.route+
   apiEndpoints.trending.mediaType[mediaType]+
   apiEndpoints.trending.timeWindow[timeWindow];
-  const res = await API(path);
-  const data = await res.data;
+  const {data} = await API(path);
   return data.results;
 }
 
@@ -77,7 +77,16 @@ function getSectionName(str){
   str = str.join(" ");
   return str;
 }
-
+async function getCredits(id){
+  const path = `${curMediaType}/${id}/credits`;
+  const {data} = await API(path);
+  return data;
+}
+async function getSimilarContent(id){
+  const path = `${curMediaType}/${id}/similar`;
+  const {data} = await API(path);
+  return data.results;
+}
 function nextTrend(){
   if(curTrendingItemIndex == trendingItems.length-1)
     curTrendingItemIndex=0;
@@ -87,8 +96,9 @@ function nextTrend(){
 }
 function renderTrending(){
   const item = trendingItems[curTrendingItemIndex];
-  
-  trendImageNode.setAttribute("src",`${imageBaseUrlMedium}${(item.backdrop_path?item.backdrop_path:item.poster_path)}`);
+  trendSection.removeEventListener("click",()=>openDetails);
+  trendSection.addEventListener("click",()=>openDetails(trendingItems[curTrendingItemIndex].id));
+  trendImageNode.setAttribute("src",`${imageBaseUrlOriginal}${(item.backdrop_path?item.backdrop_path:item.poster_path)}`);
   const year = new Date(
     curMediaType=="movie"?
     item.release_date:
@@ -114,8 +124,74 @@ function renderTrending(){
 
   trendLanguageNode.innerHTML = item.original_language;
 }
+async function renderDetails(id){
+  const path = `/${curMediaType}/${id}`;
+  const {data} = await API(path);
 
-async function openDetails(id){
+  movieDetailImage.src = imageBaseUrlMedium+(data.backdrop_path||data.poster_path);
+
+  const year = new Date(
+    data.release_date||
+    data.first_air_date
+    ).getFullYear();
+  movieDetailTitle.childNodes[0].textContent = (data.title?data.title:data.name);
+  movieDetailTitle.childNodes[1].innerHTML = year;
+  
+  let duration;
+  if(curMediaType=="movie"){
+    duration = `Movie ${Math.floor(data.runtime/60)}h ${data.runtime%60}`;
+  }else{
+    duration = `${data.seasons.length} Seasons`;
+  }
+  movieDetailDuration.innerHTML = duration;
+
+  movieDetailCategoriesContainer.innerHTML ="";
+  data.genres.forEach(genre => {
+    const div = document.createElement("div");
+    div.classList.add("category");
+    div.innerHTML = genre.name;
+    
+    movieDetailCategoriesContainer.append(div);
+  });
+  movieDetailOverview.innerHTML = data.overview||"No overview available";
+
+  movieDetailRate.innerHTML = Math.round((data.vote_average + Number.EPSILON)*10)/10;
+
+  const credits = await getCredits(id);
+  movieDetailCastContainer.innerHTML="";
+  credits.cast.forEach(cast=>{
+    if(cast.profile_path){
+      const article = document.createElement("article");
+      article.classList.add("movie-detail-cast-item");
+      const img = document.createElement("img");
+      img.classList.add("movie-detail-cast--img");
+      img.alt = cast.name;
+      img.src=imageBaseUrlSmall+cast.profile_path;
+      article.append(img);
+      movieDetailCastContainer.append(article);
+    }
+  });
+  
+  const director = credits.crew.find(crew => crew.known_for_department == "Directing");
+  movieDetailDirector.innerHTML = director.name;
+
+  const similarContent = await getSimilarContent(id);
+  movieDetailSimilarContainer.innerHTML="";
+  similarContent.forEach(content => {
+    if(content.poster_path){
+      const article = document.createElement("article");
+      article.classList.add("movie-detail-similar-item");
+      const img = document.createElement("img");
+      img.classList.add("movie-detail-similar-img");
+      img.alt = content.title||content.name;
+      img.src=imageBaseUrlSmall+content.poster_path||content.backdrop_path;
+      article.append(img);
+      article.addEventListener("click",()=>openDetails(content.id));
+      movieDetailSimilarContainer.append(article);
+    }
+  });
+}
+function openDetails(id){
   location.hash = `#${curMediaType}=${id}`;
 }
 
@@ -159,7 +235,8 @@ async function getMoviesPreview(){
   trendingItems = await getTrending(curMediaType,trendingLong);
   curTrendingItemIndex=0;
   renderTrending();
-  window.setInterval(()=>nextTrend(),8000);
+  clearInterval(trendInterval)
+  trendInterval = setInterval(nextTrend,8000);
   sectionsContainer.innerHTML="";
   const contentToRender = curMediaType=="movie"?apiEndpoints.movies:apiEndpoints.tvShows
   for(const section in contentToRender){
@@ -174,5 +251,5 @@ async function getMoviesPreview(){
 }
 
 window.onclose = ()=>{
-  clearInterval(()=>nextTrend(),8000);
+  clearInterval(trendInterval);
 };
