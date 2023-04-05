@@ -15,8 +15,22 @@ function showNodes(node){
   else
     node.classList.remove("hidden");
 }
-function searchPage(){
-  console.log("search page");
+async function searchPage(){
+  hideNodes([
+    trendSection,
+    sectionsContainer,
+    movieDetailPage
+  ]);
+  showNodes([
+    headerContainer,
+    searchResultsSection
+  ]);
+  if(searchResults.query.length){
+    const data = await getSearchResults(searchResults.query);
+    setResults(data);
+  }else{
+    location.hash="#";
+  }
 }
 function detailsPage(){
   const id = location.hash.split("=")[1];
@@ -24,7 +38,8 @@ function detailsPage(){
   hideNodes([
     headerContainer,
     sectionsContainer,
-    trendSection
+    trendSection,
+    searchResultsSection
   ]);
   showNodes([
     movieDetailPage,
@@ -34,12 +49,9 @@ function categoriesPage(){
   console.log("category page");
 }
 function homePage(){
-  if(location.hash.startsWith("#tv"))
-    curMediaType="tv";
-  else
-    curMediaType="movie";
   hideNodes([
     movieDetailPage,
+    searchResultsSection
   ]);
   showNodes([
     headerContainer,
@@ -66,6 +78,7 @@ function navigation (){
     categoriesPage();
   }else{
     homePage();
+    clearSearchResults();
   }
 }
 function backBtn(){
@@ -79,7 +92,10 @@ function hashChange(e){
   navigation();
 }
 movieDetailBackBtn.addEventListener("click",backBtn);
-window.onload = navigation;
+window.onload =()=>{
+  navigation();
+  searchbarForm.addEventListener("submit",searchContent);
+};
 window.onhashchange = (e)=>{
   hashChange(e);
 };

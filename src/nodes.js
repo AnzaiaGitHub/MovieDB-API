@@ -24,3 +24,7 @@ const trendLanguageNode = $("recommended-movie-language");
 const sectionsContainer = $("sections-container");
 const movieNav = $("navbar-movie");
 const tvNav = $("navbar-tv");
+const searchbarForm = $("header-searchbar");
+const searchbarInput = $("search-input");
+const searchResultsContainer = $("search-results-container");
+const searchResultsSection = $("search-results-section");

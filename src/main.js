@@ -41,6 +41,12 @@ const imageBaseUrlOriginal = "https://image.tmdb.org/t/p/original";
 
 // global vars
 let trendingItems = [];
+let searchResults={
+  query:"",
+  pageLoaded:1,
+  limitPage:1000,
+  results:[]
+};
 let curTrendingItemIndex = 0;
 let categoriesList;
 let trendInterval;
@@ -48,8 +54,7 @@ let curMediaType = "movie";//movie or tv
 // functions
 async function setCategories(){
   try{
-    const res = await API(`/genre/${curMediaType}/list`);
-    const data = await res.data;
+    const {data} = await API(`/genre/${curMediaType}/list`);
     if(data){
       categoriesList = data.genres;
     }
@@ -81,6 +86,60 @@ async function getCredits(id){
   const path = `${curMediaType}/${id}/credits`;
   const {data} = await API(path);
   return data;
+}
+function createMovieArticleNode(item){
+  const article = document.createElement("article");
+    article.classList.add("section-item");
+    const img = document.createElement("img");
+    img.setAttribute("src",imageBaseUrlSmall+(item.poster_path?item.poster_path:item.backdrop_path));
+    img.setAttribute("alt",item.title?item.title:item.name);
+    img.classList.add("section-item-img");
+    article.appendChild(img);
+    article.addEventListener("click",()=>{
+      openDetails(item.id)
+    });
+  return article;
+}
+function setResults(data){
+  searchResults.pageLoaded = data.page;
+  searchResults.limitPage = data.total_pages;
+  searchResults.results = data.results.filter(i => i.media_type!="person");
+  renderResults();
+}
+async function showMoreResults(){
+  if(searchResults.pageLoaded < searchResults.limitPage){
+    const data = await getSearchResults(searchResults.query,searchResults.pageLoaded+1);
+    data.results = searchResults.results.concat(data.results.filter(res => res.media_type!="person"));
+    setResults(data);
+  }
+}
+function clearSearchResults(){
+  searchResults = {
+    query:"",
+    pageLoaded:1,
+    limitPage:1000,
+    results:[]
+  };
+}
+function renderResults(){
+  searchResultsContainer.innerHTML="";
+  searchResults.results.forEach(result=>{
+    if(result.poster_path || result.backdrop_path){
+      const article = createMovieArticleNode(result);
+      searchResultsContainer.append(article);
+    }
+  });
+}
+function searchContent(e){
+  e.preventDefault();
+  const query = searchbarInput.value;
+  if(query){
+    searchResults.query = query;
+    location.hash=`#search=${query}`;
+  }else{
+    location.hash="#";
+    clearSearchResults();
+  }
 }
 async function getSimilarContent(id){
   const path = `${curMediaType}/${id}/similar`;
@@ -127,8 +186,7 @@ function renderTrending(){
 async function renderDetails(id){
   const path = `/${curMediaType}/${id}`;
   const {data} = await API(path);
-
-  movieDetailImage.src = imageBaseUrlMedium+(data.backdrop_path||data.poster_path);
+  movieDetailImage.src = imageBaseUrlMedium+(data.backdrop_path?data.backdrop_path:data.poster_path);
 
   const year = new Date(
     data.release_date||
@@ -194,6 +252,17 @@ async function renderDetails(id){
     movieDetailSimilarContainer.innerHTML="No similar content found";
   }
 }
+async function getSearchResults(query,page=1){
+  const path="search/multi";
+  const {data} = await API(path,{
+    params:{
+      api_key:API_KEY,
+      page:page,
+      query:query
+    }
+  })
+  return data;
+}
 function openDetails(id){
   location.hash = `#${curMediaType}=${id}`;
 }
@@ -211,16 +280,7 @@ function renderHomeSection(section, data){
   itemsContainer.classList.add("section-items-container");
 
   data.forEach(item => {
-    const article = document.createElement("article");
-    article.classList.add("section-item");
-    const img = document.createElement("img");
-    img.setAttribute("src",imageBaseUrlSmall+(item.poster_path?item.poster_path:item.backdrop_path));
-    img.setAttribute("alt",item.title);
-    img.classList.add("section-item-img");
-    article.appendChild(img);
-    article.addEventListener("click",()=>{
-      openDetails(item.id)
-    });
+    const article = createMovieArticleNode(item);
     itemsContainer.appendChild(article);
   });
 
@@ -240,12 +300,12 @@ async function getMoviesPreview(){
   renderTrending();
   clearInterval(trendInterval)
   trendInterval = setInterval(nextTrend,8000);
+
   sectionsContainer.innerHTML="";
   const contentToRender = curMediaType=="movie"?apiEndpoints.movies:apiEndpoints.tvShows
   for(const section in contentToRender){
     const path = contentToRender[section];
-    const res = await API(path);
-    const data = res.data;
+    const {data} = await API(path);
     const results = data.results;
     if(results){
       renderHomeSection(section,results);

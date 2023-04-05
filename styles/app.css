@@ -27,7 +27,7 @@ body{
 /*Header styles*/
 .header-container{
   width: 100vw;
-  height: 10vh;
+  max-height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,9 +100,9 @@ body{
 /* Section Styles */
 main{
   width: 100vw;
-  min-height: 90vh;
+  /* height: 100%; */
+  min-height: 80vh;
   max-height: 95vh;
-  margin-top: 8px;
   padding-bottom: 24px;
   display: flex;
   flex-direction: column;
@@ -116,6 +116,7 @@ main{
 .movie-detail-section{
   height: 100vh;
   width: 100%;
+  overflow-y:scroll;
 }
 .movie-detail-header{
   position: relative;
@@ -129,7 +130,7 @@ main{
   margin-right: 2px;
 }
 .movie-detail-header-back-btn{
-  position: absolute;
+  position: fixed;
   top: 6px;
   left: 6px;
   z-index: 2;
@@ -284,6 +285,7 @@ main{
   /* General section styles */
 .recommended-section{
   position: relative;
+  height:100%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -406,6 +408,10 @@ main{
   height: 160px;
   width: 100%;
 }
+#search-results-section{
+  width: 100%;
+  height: 100%;
+}
 .section-title{
   display: grid;
   place-items: center;
@@ -422,12 +428,28 @@ main{
   display: flex;
   gap: 4px;
 }
+#search-results-container{
+  width: 100%;
+  padding:0 10px;
+  max-height: 85vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  gap:10px;
+  /* place-items:center; */
+  overflow-y: scroll;
+}
 .section-item{
   min-height: 120px;
   min-width: 80px;
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
+}
+#search-results-container>.section-item{
+  place-self: center;
+  width: 90%;
+  height: 90%;
 }
 .section-item:nth-child(1){
   margin-left: 8px;
