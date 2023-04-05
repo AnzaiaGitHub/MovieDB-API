@@ -1,3 +1,4 @@
+let lastHash="#";
 function hideNodes(node){
   if(node==null)
     return;
@@ -56,6 +57,7 @@ function homePage(){
 }
 function navigation (){
   const hash = location.hash;
+  curMediaType = (hash.startsWith("#tv")?"tv":"movie");
   if(hash.startsWith("#search=")){
     searchPage();
   }else if(hash.startsWith("#movie=") || hash.startsWith("#tv=")){
@@ -63,9 +65,21 @@ function navigation (){
   }else if(hash.startsWith("#category=")){
     categoriesPage();
   }else{
-    curMediaType = (hash=="#tvshow"?"tv":"movie");
     homePage();
   }
 }
+function backBtn(){
+  window.location.hash = lastHash;
+}
+function hashChange(e){
+  const oldURL = new URL(e.oldURL);
+  if(!oldURL.hash.includes("=") || oldURL.hash.includes("search")){
+    lastHash=oldURL.hash;
+  }
+  navigation();
+}
+movieDetailBackBtn.addEventListener("click",backBtn);
 window.onload = navigation;
-window.onhashchange = navigation;
+window.onhashchange = (e)=>{
+  hashChange(e);
+};

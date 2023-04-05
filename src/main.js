@@ -118,7 +118,7 @@ function renderTrending(){
     trendCategoriesContainer.append(div);
   });
   
-  trendOverviewNode.innerHTML = item.overview;
+  trendOverviewNode.innerHTML = Array.from(item.overview).length<=240?item.overview:Array.from(item.overview).slice(0,236).join("")+"...";
 
   trendRateNode.innerHTML = Math.round((item.vote_average + Number.EPSILON)*10)/10;
 
@@ -173,7 +173,7 @@ async function renderDetails(id){
   });
   
   const director = credits.crew.find(crew => crew.known_for_department == "Directing");
-  movieDetailDirector.innerHTML = director.name;
+  movieDetailDirector.innerHTML = director?director.name:"Not found";
 
   const similarContent = await getSimilarContent(id);
   movieDetailSimilarContainer.innerHTML="";
@@ -190,6 +190,9 @@ async function renderDetails(id){
       movieDetailSimilarContainer.append(article);
     }
   });
+  if(!similarContent.length){
+    movieDetailSimilarContainer.innerHTML="No similar content found";
+  }
 }
 function openDetails(id){
   location.hash = `#${curMediaType}=${id}`;

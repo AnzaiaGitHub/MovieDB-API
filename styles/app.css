@@ -101,7 +101,7 @@ body{
 main{
   width: 100vw;
   min-height: 90vh;
-  max-height: 100vh;
+  max-height: 95vh;
   margin-top: 8px;
   padding-bottom: 24px;
   display: flex;
@@ -243,7 +243,7 @@ main{
   gap: 10px;
 }
 .movie-detail-cast-item{
-  min-height: 75px;
+  min-height: 70px;
   min-width: 50px;
   border-radius: 4px;
   overflow: hidden;
@@ -396,7 +396,7 @@ main{
 }
 /* Custom Sections Styles */
 .sections-container{
-  margin-top: 18px;
+  margin: 18px 0;
   width: 100vw;
 }
 .sections-container section{

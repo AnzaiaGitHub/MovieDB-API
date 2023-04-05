@@ -1,6 +1,7 @@
 const $ = (id)=>{
   return document.querySelector(`#${id}`);
 };
+const movieDetailBackBtn = $("movie-detail-header-back-btn");
 const headerContainer = $("header-container");
 const movieDetailPage = $("movie-detail-section");
 const movieDetailImage = $("movie-detail-header-img");
